@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>VIO ROS Demo</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./bootstrap/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+  </head>
+
+  <script src="./roslibjs/roslib.min.js"></script>
+    <!-- <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script src="https://static.robotwebtools.org/keyboardteleopjs/current/keyboardteleop.min.js"></script> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script> -->
+    <!-- <script src="//yoannmoinet.github.io/nipplejs/javascripts/nipplejs.js"></script> -->
+    <script src="subscribers.js"></script>
+    <script src="webui.js"></script>
+
+
+    
+  <body class="bg-light">
+    <div class="container-fluid">
+
+        <div class="row p-1 bg-dark text-light">
+            <div class="col-sm" >
+                <strong>Arena Glass</strong> [EG4301 Project Demo]
+                
+            </div>
+            <div class="col-sm"  >
+                <span id="server-ip"></span> (<span id="roslibjs-status"> Waiting to Connect... </span>)
+            </div>
+            <div class="col-sm">
+                
+            </div>
+            <div class="col-sm">
+                <span class="float-right">Cheng Huimin - 2018</span>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .img-fluid {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+
+
+    <!-- VIDEO -->
+    <div class="container-fluid">
+        <div class="row my-1">
+            <div class="col-md">
+                    Exposure=  <span id="text-exposure"> </span>,  Gain=<span id="text-gain">  </span> ,  Seq=<span id="text-seq">  </span> ,  Mean Lux=<span id="text-lux">  </span>
+                <img src="" class="my-1 img-fluid" alt="" id="video-left" />
+                <img src="" class="img-fluid" alt="" id="video-right" />
+            </div>
+            <div class="col-md ">
+                    x= <span id="text-x"> </span>, y= <span id="text-y"> </span>, z= <span id="text-z"> </span>, yaw= <span id="text-yaw"></span>
+                    <img src="" class="my-1 img-fluid" alt="" id="video-trajectories" />
+            </div>
+            <div class="col-md-3">
+                <div class="row my-1 card">
+                        <div class="col-sm card-body bg-light">
+                            <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="cb-left-viso2" onclick="cb_process()" value="option1" checked="checked">
+                            <label class="form-check-label" for="cb-left-viso2">Left Viso2</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="cb-right-viso2" onclick="cb_process()" value="option2">
+                            <label class="form-check-label" for="cb-right-viso2">Right Viso2</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="cb-trajectories" onclick="cb_process()" value="option3" checked="checked">
+                                    <label class="form-check-label" for="cb-trajectories">Trajectories</label>
+                            </div>
+                        </div>
+                    </div>
+                <div class="row my-1 card">
+                        <div class="col-md card-body bg-light">
+                            <strong>Driver Updates: </strong> <span id="state-msg-seq-driver"> </span> <br>
+                            - <strong>imu: </strong> <span id="state-msg-imu"> </span> <br>
+                            - <strong>rs2: </strong> <span id="state-msg-rs2"> </span> <br>
+            
+                            <div class="row m-1">
+                                <button type="button" class="btn btn-danger btn-sm m-1" id="btn-stop-imu">Stop IMU</button>
+                                <button type="button" class="btn btn-warning btn-sm m-1" id="btn-reset-imu">Reset IMU</button>
+                            </div>
+            
+                            <div class="row m-1">
+                                <button type="button" class="btn btn-danger btn-sm m-1" id="btn-stop-rs2">Stop RS2</button>
+                                <button type="button" class="btn btn-warning btn-sm m-1" id="btn-reset-rs2">Reset RS2</button>
+                            </div>
+
+                        </div>
+                </div>
+
+                <div class="row my-1 card">
+            
+                        <div class="col-md card-body bg-light">
+                                <strong>VIO Updates: </strong> <span id="state-msg-seq-vio"> </span> <br>
+                                - <strong>viso2: </strong> <span id="state-msg-viso2"> </span> <br>
+                                - <strong>visualiser: </strong> <span id="state-msg-visualiser"> </span> <br>
+                                - <strong>ekf: </strong> <span id="state-msg-ekf"> </span> <br>
+            
+                            <div class="row m-1">
+                                <button type="button" class="btn btn-danger btn-sm m-1" id="btn-stop-viso2">Stop Viso2</button>
+                                <button type="button" class="btn btn-warning btn-sm m-1" id="btn-reset-viso2">Reset Viso2</button>
+                            </div>
+                            
+                            <div class="row m-1">
+                                <button type="button" class="btn btn-danger btn-sm m-1" id="btn-stop-visualiser">Stop Visual</button>
+                                <button type="button" class="btn btn-warning btn-sm m-1" id="btn-reset-visualiser">Reset Visual</button>
+                            </div>
+            
+                            <div class="row m-1">
+                                <button type="button" class="btn btn-danger btn-sm m-1" id="btn-stop-ekf">Stop EKF</button>
+                                <button type="button" class="btn btn-warning btn-sm m-1" id="btn-reset-ekf">Reset EKF</button>
+                            </div>
+                            
+                        </div>
+                </div>
+                    <!-- <div class="card border-info mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Info </div>
+                            <div class="card-body text-info">
+                              <h5 class="card-title">Info card title </h5>
+                              <p class="card-text">
+                                Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                    </div>
+                    <div class="card border-danger mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Warning </div>
+                            <div class="card-body text-danger">
+                              <h5 class="card-title">Danger card title</h5>
+                              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            </div>
+                    </div> -->
+            </div>
+            
+
+            
+
+        </div>
+
+    </div>
+
+
+    <!-- Status -->
+
+
+
+    <!-- Status Concole -->
+
+    <div class="container-fluid my-4">
+        <div class="alert alert-primary">
+            <div class="row"> 
+                <div class="col">
+                        <h4 class="alert-heading">Console Output  </h4>
+                </div>  
+                <div class="col">
+                        <button type="button" class="btn btn-success btn-sm float-right" id="btn-clear">Clear Console</button>
+                        <button type="button" class="btn btn-warning mx-1 btn-sm float-right" id="btn-reset">Restart VIO</button>        
+                </div>
+            </div>
+            
+                
+           
+            <div class="row m-4" style="height:250px; overflow-y: scroll;" >
+                    <div class="col-md" id="console-display">
+                    </div>
+            </div>    
+        </div>
+
+    </div>
+    <!-- INFO -->
+    <div class="container-fluid">
+        <div class="row my-4">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="alert alert-success">
+                    <h4 class="alert-heading">VIO ROS Demo Interface</h4>
+                    <ul>
+                        <li>list1</li>
+                        <li>list2</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+    
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script> -->
+  </body>
+</html>
