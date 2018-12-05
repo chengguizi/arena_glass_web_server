@@ -52,7 +52,7 @@
     <div class="container-fluid">
         <div class="row my-1">
             <div class="col-md">
-                    Exposure=  <span id="text-exposure"> </span>,  Gain=<span id="text-gain">  </span> ,  Seq=<span id="text-seq">  </span> ,  Mean Lux=<span id="text-lux">  </span>
+                    Exposure=  <span id="text-exposure"> </span>,  Gain=<span id="text-gain">  </span> ,  Seq=<span id="text-seq">  </span> ,  Mean Lux=<span id="text-lux">  </span> , Var=<span id="text-var"></span>
                 <img src="" class="my-1 img-fluid" alt="" id="video-left" />
                 <img src="" class="img-fluid" alt="" id="video-right" />
             </div>
@@ -102,6 +102,7 @@
                                 <strong>VIO Updates: </strong> <span id="state-msg-seq-vio"> </span> <br>
                                 - <strong>viso2: </strong> <span id="state-msg-viso2"> </span> <br>
                                 - <strong>visualiser: </strong> <span id="state-msg-visualiser"> </span> <br>
+                                - <strong>recorder: </strong> <span id="state-msg-recorder"> </span> <br>
                                 - <strong>ekf: </strong> <span id="state-msg-ekf"> </span> <br>
             
                             <div class="row m-1">
@@ -156,11 +157,11 @@
         <div class="alert alert-primary">
             <div class="row"> 
                 <div class="col">
-                        <h4 class="alert-heading">Console Output  </h4>
+                    <h4 class="alert-heading">Console Output  </h4>
                 </div>  
                 <div class="col">
-                        <button type="button" class="btn btn-success btn-sm float-right" id="btn-clear">Clear Console</button>
-                        <button type="button" class="btn btn-warning mx-1 btn-sm float-right" id="btn-reset">Restart VIO</button>        
+                    <button type="button" class="btn btn-success btn-sm float-right" id="btn-clear">Clear Console</button>
+                    <button type="button" class="btn btn-warning mx-1 btn-sm float-right" id="btn-reset">Restart VIO</button>        
                 </div>
             </div>
             
@@ -174,20 +175,31 @@
 
     </div>
     <!-- INFO -->
-    <div class="container-fluid">
-        <div class="row my-4">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <div class="alert alert-success">
-                    <h4 class="alert-heading">VIO ROS Demo Interface</h4>
-                    <ul>
-                        <li>list1</li>
-                        <li>list2</li>
-                    </ul>
+    <div class="container-fluid my-4">
+ 
+            <div class="alert alert-success">
+                <div class="row">
+                    <div class="col">
+                    <h4 class="alert-heading">ROS Recording</h4>
+                    </div>  
+                    <div class="col">
+                            
+                            <button type="button" class="btn btn-success mx-1 btn-sm float-right" id="btn-record-start">Start Rec</button>
+                            <button type="button" class="btn btn-warning mx-1 btn-sm float-right" id="btn-record-stop">Stop Rec</button>
+                            <button type="button" class="btn btn-success mx-1 btn-sm float-right" id="btn-clear-record">Clear Console</button>
+                            
+                        </div>
                 </div>
+
+                <div class="row m-4" style="height:150px; overflow-y: scroll;" >
+                        <div class="col-md" id="console-record">
+                        </div>
+                </div>  
+
             </div>
-            <div class="col-md-2"></div>
-        </div>
+
+
+        
     </div>
     
       

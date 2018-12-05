@@ -20,7 +20,7 @@ function cb_process(){
 
         if (cb_trajectories.checked == true){
             // Populate video source 
-            video_trajectories.src = "http://" + robot_IP + ":8080/stream?topic=/recorder_visualiser/trajectories&type=mjpeg&quality=60";
+            video_trajectories.src = "http://" + robot_IP + ":8080/stream?topic=/visualiser/trajectories&type=mjpeg&quality=60";
         }else{
             video_trajectories.src ="";
         }
@@ -69,6 +69,11 @@ window.onload = function () {
         var myConsole = document.getElementById("console-display");
         myConsole.innerHTML = "";
     }
+
+    document.getElementById("btn-clear-record").onclick = function(){
+        var myConsole = document.getElementById("console-record");
+        myConsole.innerHTML = "";
+    }
     
 
     //// RESET VIO ROUTINE
@@ -88,6 +93,46 @@ window.onload = function () {
         var myConsole = document.getElementById("console-display");
         myConsole.innerHTML = "====================== Restart ======================";
         reset_topic.publish({frame_id:'web',stamp:{}});
+    }
+
+    /// SERVICE RECORDER ROUTINE
+
+    var record_service = new ROSLIB.Service({
+        ros : ros,
+        name : '/record',
+        serviceType : 'std_srv/SetBool'
+    });
+
+    var request_start_record = new ROSLIB.ServiceRequest({
+        data: true
+    });
+
+    var request_stop_record = new ROSLIB.ServiceRequest({
+        data: false
+    });
+
+    document.getElementById("btn-record-start").onclick = function(){
+        record_service.callService(request_start_record,function(result){
+            var para = document.createElement("p");
+            para.textContent = result.success.toString() + ', ' + result.message;
+            para.style.cssText = 'margin-bottom: 0px;';
+            para.className = "bg-warning px-1";
+
+            var myConsoleRecord = document.getElementById("console-record");
+            myConsoleRecord.insertBefore(para, myConsoleRecord.childNodes[0] );
+        });
+    }
+
+    document.getElementById("btn-record-stop").onclick = function(){
+        record_service.callService(request_stop_record,function(result){
+            var para = document.createElement("p");
+            para.textContent = result.success.toString() + ', ' + result.message;
+            para.style.cssText = 'margin-bottom: 0px;';
+            para.className = "bg-warning px-1";
+
+            var myConsoleRecord = document.getElementById("console-record");
+            myConsoleRecord.insertBefore(para, myConsoleRecord.childNodes[0] );
+        });
     }
 
 
@@ -155,12 +200,12 @@ window.onload = function () {
     });
 
     var request_restart_visualiser = new ROSLIB.ServiceRequest({
-        node : 'recorder_visualiser',
+        node : 'visualiser',
         action : 3 // restart
     });
 
     var request_stop_visualiser = new ROSLIB.ServiceRequest({
-        node : 'recorder_visualiser',
+        node : 'visualiser',
         action : 2 // stop
     });
 
@@ -203,6 +248,7 @@ window.onload = function () {
     subscribeVIOUpdates();
     subscribeRosout();
     subscribeCameraInfo();
+    subscribeViso2Info();
     subscribeEkfPoseInfo();
     cb_process();
 

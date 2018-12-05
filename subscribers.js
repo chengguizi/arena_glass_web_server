@@ -64,8 +64,11 @@ function subscribeVIOUpdates(){
                 case "ekf_fusion":
                     ID = "state-msg-ekf";
                     break;
-                case "recorder_visualiser":
+                case "visualiser":
                     ID = "state-msg-visualiser";
+                    break;
+                case "recorder":
+                    ID = "state-msg-recorder";
                     break;
                 default:
                     console.log("unknown node" + message.nodes[i].name);
@@ -143,6 +146,12 @@ function subscribeRosout(){
             //myConsole.appendChild(para);
             myConsole.insertBefore(para, myConsole.childNodes[0] );
 
+            if (msg.name == '/recorder' || msg.name ==  '/my_record_bag'){
+                var myConsoleRecord = document.getElementById("console-record");
+
+                myConsoleRecord.insertBefore(para, myConsoleRecord.childNodes[0] );
+            }
+
             // console.log(msg);
         });
 }
@@ -160,6 +169,19 @@ function subscribeCameraInfo(){
         document.getElementById("text-gain").innerHTML = msg.gain;
         document.getElementById("text-seq").innerHTML = msg.header.seq;
         document.getElementById("text-lux").innerHTML = msg.meanLux;
+    });
+
+}
+
+function subscribeViso2Info(){
+    var listener = new ROSLIB.Topic({
+        ros : ros,
+        name : '/stereo_odometer/velocity',
+        messageType : 'geometry_msgs/PoseWithCovarianceStamped'
+    });
+
+    listener.subscribe(function(msg){
+        document.getElementById("text-var").innerHTML = msg.pose.covariance[0].toFixed(6);
     });
 
 }
