@@ -5,8 +5,8 @@ function cb_process(){
 
         if (cb_viso2_left.checked == true){
             // Populate video source 
-            // video_left.src = "http://" + robot_IP + ":8080/stream?topic=/left/debug_left&type=ros_compressed";
-            video_left.src = "http://" + robot_IP + ":8080/stream?topic=/left/debug_left&type=mjpeg&quality=20";
+            video_left.src = "http://" + robot_IP + ":8080/stream?topic=/left/debug_left&type=ros_compressed";
+            // video_left.src = "http://" + robot_IP + ":8080/stream?topic=/left/debug_left&type=mjpeg&quality=20";
         }else{
             video_left.src ="";
         }

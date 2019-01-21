@@ -189,7 +189,7 @@ function subscribeViso2Info(){
 function subscribeEkfPoseInfo(){
     var listener = new ROSLIB.Topic({
         ros : ros,
-        name : '/ekf_fusion/pose',
+        name : '/ekf_fusion/pose_local',
         messageType : 'geometry_msgs/PoseWithCovarianceStamped'
     });
 
@@ -199,7 +199,7 @@ function subscribeEkfPoseInfo(){
         document.getElementById("text-z").innerHTML = msg.pose.pose.position.z.toFixed(1);
         
         var q = msg.pose.pose.orientation;
-        var yaw = -Math.atan2(-2.0*(q.x*q.y + q.w*q.z), -(q.w*q.w + q.x*q.x - q.y*q.y - q.z*q.z))/Math.PI*180;
+        var yaw = - Math.atan2(2.0*(q.x*q.y + q.w*q.z), (q.w*q.w + q.x*q.x - q.y*q.y - q.z*q.z))/Math.PI*180;
         // var yaw = Math.asin(-2.0*(q.x*q.z - q.w*q.y))/Math.PI*180;
         // var yaw = Math.atan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z)/Math.PI*180;
         document.getElementById("text-yaw").innerHTML = yaw.toFixed(0);
