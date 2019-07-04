@@ -1,0 +1,13 @@
+[Unit]
+Description=Launch file for Arena Glass ROS Nodes
+After=roscore.service
+Requires=roscore.service
+
+[Service]
+User=upsquared
+WorkingDirectory=/home/upsquared/.ros/
+ExecStart=/home/upsquared/git/services/mon-drivers.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

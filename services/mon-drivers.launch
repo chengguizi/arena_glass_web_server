@@ -1,0 +1,7 @@
+<launch>
+  <include file="$(find rs2_ros)/launch/rs2_ros.launch" > 
+    </include>
+
+  <include file="$(find ellipseimu_ros)/launch/imu.launch" > 
+    </include>
+</launch>

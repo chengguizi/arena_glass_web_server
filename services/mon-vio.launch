@@ -1,0 +1,10 @@
+<launch>
+    <include file="$(find viso2_ros)/launch/viso2_ros.launch" > 
+    </include>
+
+    <include file="$(find recorder_visualiser)/launch/visual.launch" > 
+    </include>
+
+    <include file="$(find ssf_updates)/launch/visionpose_sensor_arena_glass.launch" > 
+    </include>
+</launch>

@@ -1,0 +1,13 @@
+[Unit]
+Description=Launch file for Arena Glass VIO Nodes
+After=mon-drivers.service
+Requires=mon-drivers.service
+
+[Service]
+User=upsquared
+WorkingDirectory=/home/upsquared/.ros/
+ExecStart=/home/upsquared/git/services/mon-vio.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

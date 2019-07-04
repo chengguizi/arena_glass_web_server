@@ -1,0 +1,12 @@
+[Unit]
+Description=Launch file for ROS Web Server
+After=roscore.service
+Requires=roscore.service
+
+[Service]
+ExecStart=/home/upsquared/git/services/ros-web-server.sh
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
